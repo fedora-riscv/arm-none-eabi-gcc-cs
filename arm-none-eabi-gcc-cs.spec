@@ -15,7 +15,7 @@
 
 Name:           %{target}-gcc-cs
 Version:        %{cs_date}.%{cs_rel}
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -39,6 +39,7 @@ Source0:        gcc-%{cs_date}-%{cs_rel}.tar.bz2
 #tar jxvf %{processor_arg}-%{cs_date}-%{cs_rel}-%{target}.src.tar.bz2
 
 Source1:        README.fedora
+Patch1: arm-none-eabi-gcc-cs-aarch64.patch
 
 BuildRequires:  %{target}-binutils >= 2.21, zlib-devel gmp-devel mpfr-devel libmpc-devel flex
 Requires:       %{target}-binutils >= 2.21
@@ -70,6 +71,7 @@ GNU GCC release.
 
 %prep
 %setup -q -c
+%patch1 -p1 -b .aarch64
 pushd gcc-4.7-%{cs_date}
 
 contrib/gcc_update --touch
@@ -215,6 +217,9 @@ make check
 %endif
 
 %changelog
+* Wed Aug 14 2013 Michal Hlavinka <mhlavink@redhat.com> - 2012.09.63-3
+- fix aarch64 support (#925023)
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2012.09.63-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
