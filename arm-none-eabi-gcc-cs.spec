@@ -1,12 +1,12 @@
 # CodeSourcery releases are identified by a date, a release number,
 # and a package number for downloading from their web site
-%global cs_date        2012.09
-%global cs_rel         63
+%global cs_date        2013.05
+%global cs_rel         23
 %global cs_pkgnum      10925
 
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        4.7.2
+%global gcc_ver        4.7.3
 %global gcc_short_ver  4.7
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
@@ -15,7 +15,7 @@
 
 Name:           %{target}-gcc-cs
 Version:        %{cs_date}.%{cs_rel}
-Release:        3%{?dist}
+Release:        1%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -71,8 +71,8 @@ GNU GCC release.
 
 %prep
 %setup -q -c
-%patch1 -p1 -b .aarch64
 pushd gcc-4.7-%{cs_date}
+%patch1 -p2 -b .aarch64
 
 contrib/gcc_update --touch
 popd
@@ -217,6 +217,9 @@ make check
 %endif
 
 %changelog
+* Sun Aug 25 2013 Michal Hlavinka <mhlavink@redhat.com> - 2013.05.23-1
+- updated to 2013.05-23 release (gcc 4.7.3)
+
 * Wed Aug 14 2013 Michal Hlavinka <mhlavink@redhat.com> - 2012.09.63-3
 - fix aarch64 support (#925023)
 
