@@ -1,12 +1,12 @@
 # CodeSourcery releases are identified by a date, a release number,
 # and a package number for downloading from their web site
-%global cs_date        2012.09
-%global cs_rel         63
+%global cs_date        2013.05
+%global cs_rel         23
 %global cs_pkgnum      10925
 
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        4.7.2
+%global gcc_ver        4.7.3
 %global gcc_short_ver  4.7
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
@@ -215,6 +215,9 @@ make check
 %endif
 
 %changelog
+* Sun Aug 25 2013 Michal Hlavinka <mhlavink@redhat.com> - 2013.05.23-1
+- updated to 2013.05-23 release (gcc 4.7.3)
+
 * Tue Feb 19 2013 Michal Hlavinka <mhlavink@redhat.com> - 2012.09.63-1
 - initial package
 
