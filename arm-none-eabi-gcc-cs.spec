@@ -15,7 +15,7 @@
 
 Name:           %{target}-gcc-cs
 Version:        %{cs_date}.%{cs_rel}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -39,6 +39,7 @@ Source0:        gcc-%{cs_date}-%{cs_rel}.tar.bz2
 #tar jxvf %{processor_arg}-%{cs_date}-%{cs_rel}-%{target}.src.tar.bz2
 
 Source1:        README.fedora
+Source2:        bootstrapexplain
 
 BuildRequires:  %{target}-binutils >= 2.21, zlib-devel gmp-devel mpfr-devel libmpc-devel flex
 Requires:       %{target}-binutils >= 2.21
@@ -162,6 +163,8 @@ popd
 pushd gcc-%{target}
 %if %{bootstrap}
 make install-gcc DESTDIR=$RPM_BUILD_ROOT
+install -p -m 0755 -D %{SOURCE2} $RPM_BUILD_ROOT/%{_bindir}/%{target}-g++
+install -p -m 0755 -D %{SOURCE2} $RPM_BUILD_ROOT/%{_bindir}/%{target}-c++
 %else
 make install DESTDIR=$RPM_BUILD_ROOT
 %endif
@@ -182,7 +185,10 @@ rm -f $RPM_BUILD_ROOT%{_libexecdir}/gcc/%{target}/%{gcc_ver}/*.la
 %if %{bootstrap}
 exit 0
 %endif
+pushd gcc-%{target}
+#BuildRequires: autoge may be needed
 make check
+popd
 
 %files
 %defattr(-,root,root,-)
@@ -205,8 +211,8 @@ make check
 
 %files c++
 %defattr(-,root,root,-)
-%if ! %{bootstrap}
 %{_bindir}/%{target}-?++
+%if ! %{bootstrap}
 %{_libexecdir}/gcc/%{target}/%{gcc_ver}/cc1plus
 /usr/%{target}/include/c++/
 %dir /usr/%{target}/share/gcc-%{gcc_ver}/python/
@@ -215,6 +221,10 @@ make check
 %endif
 
 %changelog
+* Wed Oct 16 2013 Michal Hlavinka <mhlavink@redhat.com> - 2013.05.23-2
+- replace arm*-g++ with explanation script that this is just unsupported 
+  package used for bootstrapping
+
 * Sun Aug 25 2013 Michal Hlavinka <mhlavink@redhat.com> - 2013.05.23-1
 - updated to 2013.05-23 release (gcc 4.7.3)
 

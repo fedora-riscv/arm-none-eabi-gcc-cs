@@ -1,0 +1,17 @@
+#!/bin/sh
+
+cat >&2 <<EOF
+This package is compiled in bootstrap mode and used only to solve circular 
+build dependency. You don't want to use this package. It's not expected to
+work.
+
+In normal circumstances, you should not see bootstrap package in any 
+released Fedora. Unfortunatelly the package that is required to complete
+the dependency is stuck on legal review:
+https://bugzilla.redhat.com/show_bug.cgi?id=913254#c1
+
+So it will probably take some time to fix this situation.
+
+EOF
+exit 1
+
