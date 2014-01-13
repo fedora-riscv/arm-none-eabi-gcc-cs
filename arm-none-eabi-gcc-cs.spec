@@ -15,7 +15,7 @@
 
 Name:           %{target}-gcc-cs
 Version:        %{cs_date}.%{cs_rel}
-Release:        2%{?dist}
+Release:        2%{?dist}.1
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -221,6 +221,9 @@ popd
 %endif
 
 %changelog
+* Mon Jan 13 2014 Michal Hlavinka <mhlavink@redhat.com> - 2013.05.23-2.1
+- bump release for rebuild
+
 * Tue Oct 15 2013 Michal Hlavinka <mhlavink@redhat.com> - 2013.05.23-2
 - replace arm*-g++ with explanation script that this is just unsupported 
   package used for bootstrapping
