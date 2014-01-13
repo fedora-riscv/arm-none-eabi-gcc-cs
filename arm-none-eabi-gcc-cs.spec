@@ -1,13 +1,13 @@
 # CodeSourcery releases are identified by a date, a release number,
 # and a package number for downloading from their web site
-%global cs_date        2013.05
-%global cs_rel         23
-%global cs_pkgnum      10925
+%global cs_date        2013.11
+%global cs_rel         24
+%global cs_pkgnum      12189
 
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        4.7.3
-%global gcc_short_ver  4.7
+%global gcc_ver        4.8.1
+%global gcc_short_ver  4.8
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
@@ -15,7 +15,7 @@
 
 Name:           %{target}-gcc-cs
 Version:        %{cs_date}.%{cs_rel}
-Release:        2%{?dist}.1
+Release:        1%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -71,7 +71,7 @@ GNU GCC release.
 
 %prep
 %setup -q -c
-pushd gcc-4.7-%{cs_date}
+pushd gcc-%{gcc_short_ver}-%{cs_date}
 
 contrib/gcc_update --touch
 popd
@@ -102,7 +102,7 @@ sed -e 's,^[ ]*/usr/lib/rpm.*/brp-strip,./brp-strip,' \
 mkdir -p gcc-%{target}
 pushd gcc-%{target}
 CC="%{__cc} ${RPM_OPT_FLAGS}" \
-../gcc-4.7-%{cs_date}/configure --prefix=%{_prefix} --mandir=%{_mandir} --libdir=%{_libdir} \
+../gcc-%{gcc_short_ver}-%{cs_date}/configure --prefix=%{_prefix} --mandir=%{_mandir} --libdir=%{_libdir} \
   --with-pkgversion="Fedora %{version}-%{release}" \
   --with-bugurl="https://bugzilla.redhat.com/" \
   --enable-lto \
@@ -221,6 +221,9 @@ popd
 %endif
 
 %changelog
+* Mon Jan 13 2014 Michal Hlavinka <mhlavink@redhat.com> - 2013.11.24-1
+- updated to 2013.11-24
+
 * Mon Jan 13 2014 Michal Hlavinka <mhlavink@redhat.com> - 2013.05.23-2.1
 - bump release for rebuild
 
