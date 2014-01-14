@@ -1,13 +1,13 @@
 # CodeSourcery releases are identified by a date, a release number,
 # and a package number for downloading from their web site
-%global cs_date        2013.05
-%global cs_rel         23
-%global cs_pkgnum      10925
+%global cs_date        2013.11
+%global cs_rel         24
+%global cs_pkgnum      12189
 
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        4.7.3
-%global gcc_short_ver  4.7
+%global gcc_ver        4.8.1
+%global gcc_short_ver  4.8
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
@@ -15,7 +15,7 @@
 
 Name:           %{target}-gcc-cs
 Version:        %{cs_date}.%{cs_rel}
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -40,7 +40,6 @@ Source0:        gcc-%{cs_date}-%{cs_rel}.tar.bz2
 
 Source1:        README.fedora
 Source2:        bootstrapexplain
-Patch1: arm-none-eabi-gcc-cs-aarch64.patch
 
 BuildRequires:  %{target}-binutils >= 2.21, zlib-devel gmp-devel mpfr-devel libmpc-devel flex
 Requires:       %{target}-binutils >= 2.21
@@ -72,8 +71,7 @@ GNU GCC release.
 
 %prep
 %setup -q -c
-pushd gcc-4.7-%{cs_date}
-%patch1 -p2 -b .aarch64
+pushd gcc-%{gcc_short_ver}-%{cs_date}
 
 contrib/gcc_update --touch
 popd
@@ -104,7 +102,7 @@ sed -e 's,^[ ]*/usr/lib/rpm.*/brp-strip,./brp-strip,' \
 mkdir -p gcc-%{target}
 pushd gcc-%{target}
 CC="%{__cc} ${RPM_OPT_FLAGS}" \
-../gcc-4.7-%{cs_date}/configure --prefix=%{_prefix} --mandir=%{_mandir} --libdir=%{_libdir} \
+../gcc-%{gcc_short_ver}-%{cs_date}/configure --prefix=%{_prefix} --mandir=%{_mandir} --libdir=%{_libdir} \
   --with-pkgversion="Fedora %{version}-%{release}" \
   --with-bugurl="https://bugzilla.redhat.com/" \
   --enable-lto \
@@ -223,6 +221,9 @@ popd
 %endif
 
 %changelog
+* Tue Jan 14 2014 Michal Hlavinka <mhlavink@redhat.com> - 2013.11.24-1
+- updated to 2013.11-24
+
 * Fri Oct 11 2013 Michal Hlavinka <mhlavink@redhat.com> - 2013.05.23-2
 - replace arm*-g++ with explanation script that this is just unsupported 
   package used for bootstrapping
