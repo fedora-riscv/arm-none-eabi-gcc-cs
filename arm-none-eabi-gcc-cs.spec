@@ -11,11 +11,11 @@
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
-%global bootstrap      1
+%global bootstrap      0
 
 Name:           %{target}-gcc-cs
 Version:        %{cs_date}.%{cs_rel}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -41,7 +41,10 @@ Source0:        gcc-%{cs_date}-%{cs_rel}.tar.bz2
 Source1:        README.fedora
 Source2:        bootstrapexplain
 
-BuildRequires:  %{target}-binutils >= 2.21, zlib-devel gmp-devel mpfr-devel libmpc-devel flex
+BuildRequires:  %{target}-binutils >= 2.21, zlib-devel gmp-devel mpfr-devel libmpc-devel flex autogen
+%if ! %{bootstrap}
+BuildRequires:  %{target}-newlib
+%endif
 Requires:       %{target}-binutils >= 2.21
 Provides:       %{target}-gcc = %{gcc_ver}
 
@@ -106,48 +109,12 @@ CC="%{__cc} ${RPM_OPT_FLAGS}" \
   --with-pkgversion="Fedora %{version}-%{release}" \
   --with-bugurl="https://bugzilla.redhat.com/" \
   --enable-lto \
-%if 1
   --infodir=%{_infodir} --target=%{target} \
   --enable-interwork --enable-multilib --with-newlib \
 %if %{bootstrap}
   --enable-languages=c --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --without-headers --with-system-zlib --disable-libssp
 %else
-  --enable-languages=c,c++ --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --with-headers=/usr/%{target}/include --with-system-zlib
-%endif
-%else
-  --enable-poison-system-directories \
-  --infodir=%{_infodir} --target=%{target} \
-  --enable-interwork \
-  --enable-multilib \
-  --with-gnu-as \
-  --with-gnu-ld \
-%if %{bootstrap}
-  --disable-threads \
-  --disable-libssp \
-  --disable-libgomp \
-  --without-headers \
-  --with-newlib \
-  --disable-libffi \
-  --disable-libquadmath \
-  --disable-libitm \
-  --disable-libatomic \
-  --enable-languages=c,c++ \
-%else
-  --enable-languages=c,c++ \
-  --enable-threads \
-  --disable-lbmudflap \
-  --disable-libssp \
-  --disable-libstdcxx-pch \
-  --enable-extra-sgxxlite-multilibs \
-  --enable-lto \
-  --disable-libgomp \
-  --disable-libitm \
-%endif
-  --disable-nls \
-  --disable-libssp \
-  --with-system-zlib \
-  --enable-version-specific-runtime-libs \
-  --disable-shared
+  --enable-languages=c,c++ --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --with-newlib --with-headers=/usr/%{target}/include --with-system-zlib
 %endif
 
 # In general, building GCC is not smp-safe, but give it initial push anyway
@@ -221,6 +188,9 @@ popd
 %endif
 
 %changelog
+* Thu Jan 16 2014 Michal Hlavinka <mhlavink@redhat.com> - 2013.11.24-2
+- complete build with newlib
+
 * Mon Jan 13 2014 Michal Hlavinka <mhlavink@redhat.com> - 2013.11.24-1
 - updated to 2013.11-24
 
