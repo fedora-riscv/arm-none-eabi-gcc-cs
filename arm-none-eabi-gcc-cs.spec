@@ -15,7 +15,7 @@
 
 Name:           %{target}-gcc-cs
 Version:        %{cs_date}.%{cs_rel}
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -188,6 +188,9 @@ popd
 %endif
 
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2013.11.24-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Thu Jan 16 2014 Michal Hlavinka <mhlavink@redhat.com> - 2013.11.24-2
 - complete build with newlib
 
