@@ -15,7 +15,7 @@
 
 Name:           %{target}-gcc-cs
 Version:        %{cs_date}.%{cs_rel}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -91,7 +91,7 @@ case $a in
 # Prevent brp-strip* from trying to handle foreign binaries
 */brp-strip*)
   b=$(basename $a)
-  sed -e 's,find $RPM_BUILD_ROOT,find $RPM_BUILD_ROOT%_bindir $RPM_BUILD_ROOT%_libexecdir,' $a > $b
+  sed -e 's,find "*$RPM_BUILD_ROOT"*,find "$RPM_BUILD_ROOT%_bindir" "$RPM_BUILD_ROOT%_libexecdir",' $a > $b
   chmod a+x $b
   ;;
 esac
@@ -188,6 +188,9 @@ popd
 %endif
 
 %changelog
+* Tue Sep 02 2014 Michal Hlavinka <mhlavink@redhat.com> - 2014.05.28-2
+- update workaround that prevents stripping of arm libraries
+
 * Thu Aug 21 2014 Michal Hlavinka <mhlavink@redhat.com> - 2014.05.28-1
 - updated to 2014.05-28
 
