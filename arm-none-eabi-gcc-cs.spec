@@ -15,7 +15,7 @@
 
 Name:           %{target}-gcc-cs
 Version:        %{cs_date}.%{cs_rel}
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -91,7 +91,7 @@ case $a in
 # Prevent brp-strip* from trying to handle foreign binaries
 */brp-strip*)
   b=$(basename $a)
-  sed -e 's,find $RPM_BUILD_ROOT,find $RPM_BUILD_ROOT%_bindir $RPM_BUILD_ROOT%_libexecdir,' $a > $b
+  sed -e 's,find "*$RPM_BUILD_ROOT"*,find "$RPM_BUILD_ROOT%_bindir" "$RPM_BUILD_ROOT%_libexecdir",' $a > $b
   chmod a+x $b
   ;;
 esac
@@ -188,6 +188,9 @@ popd
 %endif
 
 %changelog
+* Tue Sep 02 2014 Michal Hlavinka <mhlavink@redhat.com> - 2013.11.24-5
+- update workaround that prevents stripping of arm libraries
+
 * Fri Aug 15 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2013.11.24-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
