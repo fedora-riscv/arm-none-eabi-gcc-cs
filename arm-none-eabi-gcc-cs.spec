@@ -1,12 +1,12 @@
 # CodeSourcery releases are identified by a date, a release number,
 # and a package number for downloading from their web site
-%global cs_date        2013.11
-%global cs_rel         24
-%global cs_pkgnum      12189
+%global cs_date        2014.05
+%global cs_rel         28
+%global cs_pkgnum      12773
 
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        4.8.1
+%global gcc_ver        4.8.3
 %global gcc_short_ver  4.8
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
@@ -110,11 +110,11 @@ CC="%{__cc} ${RPM_OPT_FLAGS}" \
   --with-bugurl="https://bugzilla.redhat.com/" \
   --enable-lto \
   --infodir=%{_infodir} --target=%{target} \
-  --enable-interwork --enable-multilib --with-newlib \
+  --enable-interwork --enable-multilib \
 %if %{bootstrap}
   --enable-languages=c --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --without-headers --with-system-zlib --disable-libssp
 %else
-  --enable-languages=c,c++ --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --with-newlib --with-headers=/usr/%{target}/include --with-system-zlib
+  --enable-languages=c,c++ --enable-plugins --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --with-newlib --with-headers=/usr/%{target}/include --with-system-zlib
 %endif
 
 # In general, building GCC is not smp-safe, but give it initial push anyway
@@ -188,6 +188,12 @@ popd
 %endif
 
 %changelog
+* Tue Sep 02 2014 Michal Hlavinka <mhlavink@redhat.com> - 2014.05.28-2
+- update workaround that prevents stripping of arm libraries
+
+* Thu Aug 21 2014 Michal Hlavinka <mhlavink@redhat.com> - 2014.05.28-1
+- updated to 2014.05-28
+
 * Thu Jan 16 2014 Michal Hlavinka <mhlavink@redhat.com> - 2013.11.24-2
 - complete build with newlib
 
