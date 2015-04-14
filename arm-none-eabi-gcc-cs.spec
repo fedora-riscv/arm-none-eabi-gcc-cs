@@ -130,7 +130,7 @@ CC="%{__cc} ${RPM_OPT_FLAGS}" \
     --disable-threads \
     --disable-tls \
 %if %{bootstrap}
-   --enable-languages=c --with-newlib --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --without-headers 
+   --enable-languages=c --with-newlib --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --without-headers --with-system-zlib
 %else
    --enable-languages=c,c++ --with-newlib --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --with-headers=/usr/%{target}/include --with-system-zlib
 %endif
