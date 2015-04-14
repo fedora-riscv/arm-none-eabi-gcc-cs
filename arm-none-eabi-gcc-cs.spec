@@ -6,16 +6,17 @@
 
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        4.8.3
-%global gcc_short_ver  4.8
+%global gcc_ver        4.9.2
+%global gcc_short_ver  4.9
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
-%global bootstrap      0
+%global bootstrap      1
 
 Name:           %{target}-gcc-cs
-Version:        %{cs_date}.%{cs_rel}
-Release:        2%{?dist}
+Epoch:          1
+Version:        4.9.2
+Release:        1%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -33,13 +34,15 @@ License:        GPLv2+ and GPLv3+ and LGPLv2+ and BSD
 URL:            http://www.codesourcery.com/sgpp/lite/%{processor_arch}
 
 #we don't use orignal tarball, because it's HUGE
-Source0:        gcc-%{cs_date}-%{cs_rel}.tar.bz2
+#Source0:        gcc-%{cs_date}-%{cs_rel}.tar.bz2
+Source0:        gcc-%{gcc_ver}.tar.bz2
 #Source0 origin:
 #wget https://sourcery.mentor.com/GNUToolchain/package%{cs_pkgnum}/public/%{target}/%{processor_arch}-%{cs_date}-%{cs_rel}-%{target}.src.tar.bz2
 #tar jxvf %{processor_arg}-%{cs_date}-%{cs_rel}-%{target}.src.tar.bz2
 
 Source1:        README.fedora
 Source2:        bootstrapexplain
+Patch1:         enable-with-multilib-list-for-arm.patch
 
 BuildRequires:  %{target}-binutils >= 2.21, zlib-devel gmp-devel mpfr-devel libmpc-devel flex autogen
 %if ! %{bootstrap}
@@ -74,7 +77,8 @@ GNU GCC release.
 
 %prep
 %setup -q -c
-pushd gcc-%{gcc_short_ver}-%{cs_date}
+pushd gcc-%{gcc_ver}
+%patch1 -p2 -b .arm
 
 contrib/gcc_update --touch
 popd
@@ -91,7 +95,7 @@ case $a in
 # Prevent brp-strip* from trying to handle foreign binaries
 */brp-strip*)
   b=$(basename $a)
-  sed -e 's,find $RPM_BUILD_ROOT,find $RPM_BUILD_ROOT%_bindir $RPM_BUILD_ROOT%_libexecdir,' $a > $b
+  sed -e 's,find "*$RPM_BUILD_ROOT"*,find "$RPM_BUILD_ROOT%_bindir" "$RPM_BUILD_ROOT%_libexecdir",' $a > $b
   chmod a+x $b
   ;;
 esac
@@ -105,23 +109,37 @@ sed -e 's,^[ ]*/usr/lib/rpm.*/brp-strip,./brp-strip,' \
 mkdir -p gcc-%{target}
 pushd gcc-%{target}
 CC="%{__cc} ${RPM_OPT_FLAGS}" \
-../gcc-%{gcc_short_ver}-%{cs_date}/configure --prefix=%{_prefix} --mandir=%{_mandir} --libdir=%{_libdir} \
+../gcc-%{gcc_ver}/configure --prefix=%{_prefix} --mandir=%{_mandir} \
   --with-pkgversion="Fedora %{version}-%{release}" \
   --with-bugurl="https://bugzilla.redhat.com/" \
-  --enable-lto \
   --infodir=%{_infodir} --target=%{target} \
   --enable-interwork --enable-multilib \
+  --with-python-dir=share/gcc-%{target} \
+  --with-multilib-list=armv6-m,armv7-m,armv7e-m,armv7-r \
+    --enable-plugins \
+    --disable-decimal-float \
+    --disable-libffi \
+    --disable-libgomp \
+    --disable-libmudflap \
+    --disable-libquadmath \
+    --disable-libssp \
+    --disable-libstdcxx-pch \
+   --disable-libstdc++-v3 \
+    --disable-nls \
+    --disable-shared \
+    --disable-threads \
+    --disable-tls \
 %if %{bootstrap}
-  --enable-languages=c --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --without-headers --with-system-zlib --disable-libssp
+   --enable-languages=c --with-newlib --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --without-headers 
 %else
-  --enable-languages=c,c++ --enable-plugins --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --with-newlib --with-headers=/usr/%{target}/include --with-system-zlib
+   --enable-languages=c,c++ --with-newlib --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --with-headers=/usr/%{target}/include --with-system-zlib
 %endif
+#  --enable-lto \
 
-# In general, building GCC is not smp-safe, but give it initial push anyway
 %if %{bootstrap}
-make all-gcc %{?_smp_mflags} || make all-gcc
+make all-gcc  INHIBIT_LIBC_CFLAGS='-DUSE_TM_CLONE_REGISTRY=0'
 %else
-make %{?_smp_mflags} || make
+make  INHIBIT_LIBC_CFLAGS='-DUSE_TM_CLONE_REGISTRY=0'
 %endif
 popd
 
@@ -139,11 +157,16 @@ popd
 # we don't want these as we are a cross version
 rm -r $RPM_BUILD_ROOT%{_infodir}
 rm -r $RPM_BUILD_ROOT%{_mandir}/man7
-rm -f $RPM_BUILD_ROOT%{_libdir}/libiberty.a
+rm -f $RPM_BUILD_ROOT%{_prefix}/lib/libiberty.a
 # and these aren't usefull for embedded targets
 rm -r $RPM_BUILD_ROOT%{_prefix}/lib*/gcc/%{target}/%{gcc_ver}/install-tools ||:
 rm -r $RPM_BUILD_ROOT%{_libexecdir}/gcc/%{target}/%{gcc_ver}/install-tools ||:
 rm -f $RPM_BUILD_ROOT%{_libexecdir}/gcc/%{target}/%{gcc_ver}/*.la
+
+
+mkdir -p $RPM_BUILD_ROOT/usr/%{target}/share/gcc-%{gcc_ver}/
+mv $RPM_BUILD_ROOT/%{_datadir}/gcc-%{gcc_ver}/* $RPM_BUILD_ROOT/usr/%{target}/share/gcc-%{gcc_ver}/ ||:
+rm -rf $RPM_BUILD_ROOT/%{_datadir}/gcc-%{gcc_ver} ||:
 
 %global __os_install_post . ./os_install_post
 
@@ -159,18 +182,18 @@ popd
 
 %files
 %defattr(-,root,root,-)
-%doc gcc-%{gcc_short_ver}-%{cs_date}/COPYING*
-%doc gcc-%{gcc_short_ver}-%{cs_date}/README README.fedora
+%doc gcc-%{gcc_ver}/COPYING*
+%doc gcc-%{gcc_ver}/README README.fedora
 %{_bindir}/%{target}-*
-%dir %{_libdir}/gcc
-%dir %{_libdir}/gcc/%{target}
-%{_libdir}/gcc/%{target}/%{gcc_ver}
+%dir %{_prefix}/lib/gcc
+%dir %{_prefix}/lib/gcc/%{target}
+%{_prefix}/lib/gcc/%{target}/%{gcc_ver}
 %dir %{_libexecdir}/gcc
 %dir %{_libexecdir}/gcc/%{target}
 %{_libexecdir}/gcc/%{target}/%{gcc_ver}
 %{_mandir}/man1/%{target}-*.1.gz
 %if ! %{bootstrap}
-/usr/%{target}/lib/
+#/usr/%{target}/lib/
 %exclude %{_bindir}/%{target}-?++
 %exclude %{_libexecdir}/gcc/%{target}/%{gcc_ver}/cc1plus
 %exclude %{_mandir}/man1/%{target}-g++.1.gz
@@ -181,18 +204,29 @@ popd
 %{_bindir}/%{target}-?++
 %if ! %{bootstrap}
 %{_libexecdir}/gcc/%{target}/%{gcc_ver}/cc1plus
-/usr/%{target}/include/c++/
-%dir /usr/%{target}/share/gcc-%{gcc_ver}/python/
-/usr/%{target}/share/gcc-%{gcc_ver}/python/libstdcxx/
+#/usr/%{target}/include/c++/
+#%dir /usr/%{target}/share/gcc-%{gcc_ver}/python/
+#/usr/%{target}/share/gcc-%{gcc_ver}/python/libstdcxx/
 %{_mandir}/man1/%{target}-g++.1.gz
 %endif
 
 %changelog
+* Tue Apr 14 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:4.9.2-1
+- update to gcc 4.9.2
+- fix library compatiblity 
+- BOOTSTRAP version, not for regular use
+
 * Tue Sep 02 2014 Michal Hlavinka <mhlavink@redhat.com> - 2014.05.28-2
 - update workaround that prevents stripping of arm libraries
 
 * Thu Aug 21 2014 Michal Hlavinka <mhlavink@redhat.com> - 2014.05.28-1
 - updated to 2014.05-28
+
+* Fri Aug 15 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2013.11.24-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2013.11.24-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
 * Thu Jan 16 2014 Michal Hlavinka <mhlavink@redhat.com> - 2013.11.24-2
 - complete build with newlib
