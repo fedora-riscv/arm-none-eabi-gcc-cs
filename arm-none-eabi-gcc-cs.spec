@@ -16,7 +16,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        4.9.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -211,6 +211,9 @@ popd
 %endif
 
 %changelog
+* Wed Apr 15 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:4.9.2-2
+- add epoch number
+
 * Tue Apr 14 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:4.9.2-1
 - update to gcc 4.9.2
 - fix library compatiblity 
