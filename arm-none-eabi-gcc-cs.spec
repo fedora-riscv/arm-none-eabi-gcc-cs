@@ -11,12 +11,12 @@
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
-%global bootstrap      1
+%global bootstrap      0
 
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        4.9.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -211,6 +211,9 @@ popd
 %endif
 
 %changelog
+* Wed Apr 15 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:4.9.2-3
+- regular build
+
 * Wed Apr 15 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:4.9.2-2
 - add epoch number
 
