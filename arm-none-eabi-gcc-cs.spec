@@ -63,7 +63,7 @@ GNU GCC release.
 %package c++
 Summary:        Cross Compiling GNU GCC targeted at %{target}
 Group:          Development/Languages
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name} = %{epoch}:%{version}-%{release}
 Provides:       %{target}-gcc-c++ = %{gcc_ver}
 
 %description c++
