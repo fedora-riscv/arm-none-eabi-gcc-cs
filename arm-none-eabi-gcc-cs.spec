@@ -6,17 +6,17 @@
 
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        4.9.2
-%global gcc_short_ver  4.9
+%global gcc_ver        5.1.0
+%global gcc_short_ver  5.1
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
-%global bootstrap      0
+%global bootstrap      1
 
 Name:           %{target}-gcc-cs
 Epoch:          1
-Version:        4.9.2
-Release:        3%{?dist}
+Version:        5.1.0
+Release:        1%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -108,7 +108,7 @@ sed -e 's,^[ ]*/usr/lib/rpm.*/brp-strip,./brp-strip,' \
 %build
 mkdir -p gcc-%{target}
 pushd gcc-%{target}
-CC="%{__cc} ${RPM_OPT_FLAGS}" \
+CC="%{__cc} ${RPM_OPT_FLAGS}  -fno-stack-protector" \
 ../gcc-%{gcc_ver}/configure --prefix=%{_prefix} --mandir=%{_mandir} \
   --with-pkgversion="Fedora %{version}-%{release}" \
   --with-bugurl="https://bugzilla.redhat.com/" \
@@ -211,6 +211,9 @@ popd
 %endif
 
 %changelog
+* Sun May 31 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:5.1.0-3
+- updated to gcc 5.1.0
+
 * Wed Apr 15 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:4.9.2-3
 - regular build
 
