@@ -159,6 +159,7 @@ rm -r $RPM_BUILD_ROOT%{_infodir}
 rm -r $RPM_BUILD_ROOT%{_mandir}/man7
 rm -f $RPM_BUILD_ROOT%{_prefix}/lib/libiberty.a
 # and these aren't usefull for embedded targets
+rm    $RPM_BUILD_ROOT%{_libdir}/libcc1* ||:
 rm -r $RPM_BUILD_ROOT%{_prefix}/lib*/gcc/%{target}/%{gcc_ver}/install-tools ||:
 rm -r $RPM_BUILD_ROOT%{_libexecdir}/gcc/%{target}/%{gcc_ver}/install-tools ||:
 rm -f $RPM_BUILD_ROOT%{_libexecdir}/gcc/%{target}/%{gcc_ver}/*.la
