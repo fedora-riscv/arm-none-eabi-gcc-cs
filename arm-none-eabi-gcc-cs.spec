@@ -11,12 +11,12 @@
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
-%global bootstrap      1
+%global bootstrap      0
 
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        5.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -211,7 +211,10 @@ popd
 %endif
 
 %changelog
-* Sun May 31 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:5.1.0-3
+* Mon Jun 01 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:5.1.0-2
+- updated to gcc 5.1.0, regular build
+
+* Sun May 31 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:5.1.0-1
 - updated to gcc 5.1.0, bootstrap build
 
 * Wed Apr 15 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:4.9.2-3
