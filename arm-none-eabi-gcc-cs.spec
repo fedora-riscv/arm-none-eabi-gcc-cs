@@ -16,7 +16,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        5.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -211,6 +211,9 @@ popd
 %endif
 
 %changelog
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:5.1.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Sun May 31 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:5.1.0-3
 - updated to gcc 5.1.0
 
