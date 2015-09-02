@@ -6,17 +6,17 @@
 
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        5.1.0
-%global gcc_short_ver  5.1
+%global gcc_ver        5.2.0
+%global gcc_short_ver  5.2
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
-%global bootstrap      0
+%global bootstrap      1
 
 Name:           %{target}-gcc-cs
 Epoch:          1
-Version:        5.1.0
-Release:        2%{?dist}
+Version:        5.2.0
+Release:        1%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -124,7 +124,6 @@ CC="%{__cc} ${RPM_OPT_FLAGS}  -fno-stack-protector" \
     --disable-libquadmath \
     --disable-libssp \
     --disable-libstdcxx-pch \
-   --disable-libstdc++-v3 \
     --disable-nls \
     --disable-shared \
     --disable-threads \
@@ -205,13 +204,16 @@ popd
 %{_bindir}/%{target}-?++
 %if ! %{bootstrap}
 %{_libexecdir}/gcc/%{target}/%{gcc_ver}/cc1plus
-#/usr/%{target}/include/c++/
+/usr/%{target}/include/c++/
 #%dir /usr/%{target}/share/gcc-%{gcc_ver}/python/
 #/usr/%{target}/share/gcc-%{gcc_ver}/python/libstdcxx/
 %{_mandir}/man1/%{target}-g++.1.gz
 %endif
 
 %changelog
+* Wed Sep 02 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:5.2.0-1
+- bootstrap build of 5.2.0 update
+
 * Mon Jun 01 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:5.1.0-2
 - updated to gcc 5.1.0, regular build
 
