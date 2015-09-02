@@ -6,8 +6,8 @@
 
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        5.1.0
-%global gcc_short_ver  5.1
+%global gcc_ver        5.2.0
+%global gcc_short_ver  5.2
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
@@ -15,7 +15,7 @@
 
 Name:           %{target}-gcc-cs
 Epoch:          1
-Version:        5.1.0
+Version:        5.2.0
 Release:        1%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
@@ -124,7 +124,6 @@ CC="%{__cc} ${RPM_OPT_FLAGS}  -fno-stack-protector" \
     --disable-libquadmath \
     --disable-libssp \
     --disable-libstdcxx-pch \
-   --disable-libstdc++-v3 \
     --disable-nls \
     --disable-shared \
     --disable-threads \
@@ -211,6 +210,9 @@ popd
 %endif
 
 %changelog
+* Wed Sep 02 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:5.2.0-1
+- bootstrap build of 5.2.0 update
+
 * Sun May 31 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:5.1.0-3
 - updated to gcc 5.1.0, bootstrap build
 
