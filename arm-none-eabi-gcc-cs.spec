@@ -6,8 +6,8 @@
 
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        5.1.0
-%global gcc_short_ver  5.1
+%global gcc_ver        5.2.0
+%global gcc_short_ver  5.2
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
@@ -203,7 +203,7 @@ popd
 %{_bindir}/%{target}-?++
 %if ! %{bootstrap}
 %{_libexecdir}/gcc/%{target}/%{gcc_ver}/cc1plus
-#/usr/%{target}/include/c++/
+/usr/%{target}/include/c++/
 #%dir /usr/%{target}/share/gcc-%{gcc_ver}/python/
 #/usr/%{target}/share/gcc-%{gcc_ver}/python/libstdcxx/
 %{_mandir}/man1/%{target}-g++.1.gz
