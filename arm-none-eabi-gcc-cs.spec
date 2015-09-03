@@ -1,9 +1,3 @@
-# CodeSourcery releases are identified by a date, a release number,
-# and a package number for downloading from their web site
-%global cs_date        2014.05
-%global cs_rel         28
-%global cs_pkgnum      12773
-
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
 %global gcc_ver        5.2.0
@@ -33,12 +27,7 @@ Group:          Development/Tools
 License:        GPLv2+ and GPLv3+ and LGPLv2+ and BSD
 URL:            http://www.codesourcery.com/sgpp/lite/%{processor_arch}
 
-#we don't use orignal tarball, because it's HUGE
-#Source0:        gcc-%{cs_date}-%{cs_rel}.tar.bz2
 Source0:        gcc-%{gcc_ver}.tar.bz2
-#Source0 origin:
-#wget https://sourcery.mentor.com/GNUToolchain/package%{cs_pkgnum}/public/%{target}/%{processor_arch}-%{cs_date}-%{cs_rel}-%{target}.src.tar.bz2
-#tar jxvf %{processor_arg}-%{cs_date}-%{cs_rel}-%{target}.src.tar.bz2
 
 Source1:        README.fedora
 Source2:        bootstrapexplain
@@ -70,10 +59,6 @@ Provides:       %{target}-gcc-c++ = %{gcc_ver}
 This package contains the Cross Compiling version of g++, which can be used to
 compile c++ code for the %{target} platform, instead of for the native 
 %{_arch} platform.
-
-This package is based on the CodeSourcery %{cs_date}-%{cs_rel} release,
-which includes improved ARM target support compared to the corresponding 
-GNU GCC release.
 
 %prep
 %setup -q -c
