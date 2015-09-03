@@ -1,9 +1,3 @@
-# CodeSourcery releases are identified by a date, a release number,
-# and a package number for downloading from their web site
-%global cs_date        2014.05
-%global cs_rel         28
-%global cs_pkgnum      12773
-
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
 %global gcc_ver        5.2.0
@@ -11,12 +5,12 @@
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
-%global bootstrap      1
+%global bootstrap      0
 
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        5.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -33,12 +27,7 @@ Group:          Development/Tools
 License:        GPLv2+ and GPLv3+ and LGPLv2+ and BSD
 URL:            http://www.codesourcery.com/sgpp/lite/%{processor_arch}
 
-#we don't use orignal tarball, because it's HUGE
-#Source0:        gcc-%{cs_date}-%{cs_rel}.tar.bz2
 Source0:        gcc-%{gcc_ver}.tar.bz2
-#Source0 origin:
-#wget https://sourcery.mentor.com/GNUToolchain/package%{cs_pkgnum}/public/%{target}/%{processor_arch}-%{cs_date}-%{cs_rel}-%{target}.src.tar.bz2
-#tar jxvf %{processor_arg}-%{cs_date}-%{cs_rel}-%{target}.src.tar.bz2
 
 Source1:        README.fedora
 Source2:        bootstrapexplain
@@ -70,10 +59,6 @@ Provides:       %{target}-gcc-c++ = %{gcc_ver}
 This package contains the Cross Compiling version of g++, which can be used to
 compile c++ code for the %{target} platform, instead of for the native 
 %{_arch} platform.
-
-This package is based on the CodeSourcery %{cs_date}-%{cs_rel} release,
-which includes improved ARM target support compared to the corresponding 
-GNU GCC release.
 
 %prep
 %setup -q -c
@@ -114,7 +99,7 @@ CC="%{__cc} ${RPM_OPT_FLAGS}  -fno-stack-protector" \
   --with-bugurl="https://bugzilla.redhat.com/" \
   --infodir=%{_infodir} --target=%{target} \
   --enable-interwork --enable-multilib \
-  --with-python-dir=share/gcc-%{target} \
+  --with-python-dir=%{target}/share/gcc-%{version}/python \
   --with-multilib-list=armv6-m,armv7-m,armv7e-m,armv7-r \
     --enable-plugins \
     --disable-decimal-float \
@@ -157,8 +142,11 @@ popd
 rm -r $RPM_BUILD_ROOT%{_infodir}
 rm -r $RPM_BUILD_ROOT%{_mandir}/man7
 rm -f $RPM_BUILD_ROOT%{_prefix}/lib/libiberty.a
+rm -f $RPM_BUILD_ROOT%{_libdir}/libcc1* ||:
+# these directories are often empty
+rmdir $RPM_BUILD_ROOT/usr/%{target}/share/gcc-%{gcc_ver} ||:
+rmdir $RPM_BUILD_ROOT/usr/%{target}/share ||:
 # and these aren't usefull for embedded targets
-rm    $RPM_BUILD_ROOT%{_libdir}/libcc1* ||:
 rm -r $RPM_BUILD_ROOT%{_prefix}/lib*/gcc/%{target}/%{gcc_ver}/install-tools ||:
 rm -r $RPM_BUILD_ROOT%{_libexecdir}/gcc/%{target}/%{gcc_ver}/install-tools ||:
 rm -f $RPM_BUILD_ROOT%{_libexecdir}/gcc/%{target}/%{gcc_ver}/*.la
@@ -193,7 +181,8 @@ popd
 %{_libexecdir}/gcc/%{target}/%{gcc_ver}
 %{_mandir}/man1/%{target}-*.1.gz
 %if ! %{bootstrap}
-#/usr/%{target}/lib/
+/usr/%{target}/lib/
+%dir /usr/%{target}/share/gcc-%{gcc_ver}/python/
 %exclude %{_bindir}/%{target}-?++
 %exclude %{_libexecdir}/gcc/%{target}/%{gcc_ver}/cc1plus
 %exclude %{_mandir}/man1/%{target}-g++.1.gz
@@ -205,20 +194,22 @@ popd
 %if ! %{bootstrap}
 %{_libexecdir}/gcc/%{target}/%{gcc_ver}/cc1plus
 /usr/%{target}/include/c++/
-#%dir /usr/%{target}/share/gcc-%{gcc_ver}/python/
-#/usr/%{target}/share/gcc-%{gcc_ver}/python/libstdcxx/
+/usr/%{target}/share/gcc-%{gcc_ver}/python/libstdcxx/
 %{_mandir}/man1/%{target}-g++.1.gz
 %endif
 
 %changelog
+* Thu Sep 03 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:5.2.0-2
+- regular build of 5.2.0
+
 * Wed Sep 02 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:5.2.0-1
 - bootstrap build of 5.2.0 update
 
-* Mon Jun 01 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:5.1.0-2
-- updated to gcc 5.1.0, regular build
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:5.1.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Sun May 31 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:5.1.0-1
-- updated to gcc 5.1.0, bootstrap build
+* Sun May 31 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:5.1.0-3
+- updated to gcc 5.1.0
 
 * Wed Apr 15 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:4.9.2-3
 - regular build
