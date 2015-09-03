@@ -157,7 +157,10 @@ popd
 rm -r $RPM_BUILD_ROOT%{_infodir}
 rm -r $RPM_BUILD_ROOT%{_mandir}/man7
 rm -f $RPM_BUILD_ROOT%{_prefix}/lib/libiberty.a
-rm    $RPM_BUILD_ROOT%{_libdir}/libcc1* ||:
+rm -f $RPM_BUILD_ROOT%{_libdir}/libcc1* ||:
+# these directories are often empty
+rmdir $RPM_BUILD_ROOT/usr/%{target}/share/gcc-%{gcc_ver} ||:
+rmdir $RPM_BUILD_ROOT/usr/%{target}/share ||:
 # and these aren't usefull for embedded targets
 rm -r $RPM_BUILD_ROOT%{_prefix}/lib*/gcc/%{target}/%{gcc_ver}/install-tools ||:
 rm -r $RPM_BUILD_ROOT%{_libexecdir}/gcc/%{target}/%{gcc_ver}/install-tools ||:
@@ -194,7 +197,7 @@ popd
 %{_mandir}/man1/%{target}-*.1.gz
 %if ! %{bootstrap}
 /usr/%{target}/lib/
-%dir /usr/%{target}/share/gcc-%{gcc_ver}/python/
+#%dir /usr/%{target}/share/gcc-%{gcc_ver}/python/
 %exclude %{_bindir}/%{target}-?++
 %exclude %{_libexecdir}/gcc/%{target}/%{gcc_ver}/cc1plus
 %exclude %{_mandir}/man1/%{target}-g++.1.gz
@@ -206,7 +209,7 @@ popd
 %if ! %{bootstrap}
 %{_libexecdir}/gcc/%{target}/%{gcc_ver}/cc1plus
 /usr/%{target}/include/c++/
-/usr/%{target}/share/gcc-%{gcc_ver}/python/libstdcxx/
+#/usr/%{target}/share/gcc-%{gcc_ver}/python/libstdcxx/
 %{_mandir}/man1/%{target}-g++.1.gz
 %endif
 
