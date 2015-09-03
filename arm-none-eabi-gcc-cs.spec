@@ -11,12 +11,12 @@
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
-%global bootstrap      1
+%global bootstrap      0
 
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        5.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -157,6 +157,7 @@ popd
 rm -r $RPM_BUILD_ROOT%{_infodir}
 rm -r $RPM_BUILD_ROOT%{_mandir}/man7
 rm -f $RPM_BUILD_ROOT%{_prefix}/lib/libiberty.a
+rm    $RPM_BUILD_ROOT%{_libdir}/libcc1* ||:
 # and these aren't usefull for embedded targets
 rm -r $RPM_BUILD_ROOT%{_prefix}/lib*/gcc/%{target}/%{gcc_ver}/install-tools ||:
 rm -r $RPM_BUILD_ROOT%{_libexecdir}/gcc/%{target}/%{gcc_ver}/install-tools ||:
@@ -192,7 +193,8 @@ popd
 %{_libexecdir}/gcc/%{target}/%{gcc_ver}
 %{_mandir}/man1/%{target}-*.1.gz
 %if ! %{bootstrap}
-#/usr/%{target}/lib/
+/usr/%{target}/lib/
+%dir /usr/%{target}/share/gcc-%{gcc_ver}/python/
 %exclude %{_bindir}/%{target}-?++
 %exclude %{_libexecdir}/gcc/%{target}/%{gcc_ver}/cc1plus
 %exclude %{_mandir}/man1/%{target}-g++.1.gz
@@ -204,12 +206,14 @@ popd
 %if ! %{bootstrap}
 %{_libexecdir}/gcc/%{target}/%{gcc_ver}/cc1plus
 /usr/%{target}/include/c++/
-#%dir /usr/%{target}/share/gcc-%{gcc_ver}/python/
-#/usr/%{target}/share/gcc-%{gcc_ver}/python/libstdcxx/
+/usr/%{target}/share/gcc-%{gcc_ver}/python/libstdcxx/
 %{_mandir}/man1/%{target}-g++.1.gz
 %endif
 
 %changelog
+* Thu Sep 03 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:5.2.0-2
+- regular build of 5.2.0
+
 * Wed Sep 02 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:5.2.0-1
 - bootstrap build of 5.2.0 update
 
