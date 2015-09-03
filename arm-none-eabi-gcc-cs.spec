@@ -114,7 +114,7 @@ CC="%{__cc} ${RPM_OPT_FLAGS}  -fno-stack-protector" \
   --with-bugurl="https://bugzilla.redhat.com/" \
   --infodir=%{_infodir} --target=%{target} \
   --enable-interwork --enable-multilib \
-  --with-python-dir=share/gcc-%{target} \
+  --with-python-dir=%{target}/share/gcc-%{version}/python \
   --with-multilib-list=armv6-m,armv7-m,armv7e-m,armv7-r \
     --enable-plugins \
     --disable-decimal-float \
@@ -197,7 +197,7 @@ popd
 %{_mandir}/man1/%{target}-*.1.gz
 %if ! %{bootstrap}
 /usr/%{target}/lib/
-#%dir /usr/%{target}/share/gcc-%{gcc_ver}/python/
+%dir /usr/%{target}/share/gcc-%{gcc_ver}/python/
 %exclude %{_bindir}/%{target}-?++
 %exclude %{_libexecdir}/gcc/%{target}/%{gcc_ver}/cc1plus
 %exclude %{_mandir}/man1/%{target}-g++.1.gz
@@ -209,7 +209,7 @@ popd
 %if ! %{bootstrap}
 %{_libexecdir}/gcc/%{target}/%{gcc_ver}/cc1plus
 /usr/%{target}/include/c++/
-#/usr/%{target}/share/gcc-%{gcc_ver}/python/libstdcxx/
+/usr/%{target}/share/gcc-%{gcc_ver}/python/libstdcxx/
 %{_mandir}/man1/%{target}-g++.1.gz
 %endif
 
