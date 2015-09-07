@@ -6,12 +6,7 @@ build dependency. You don't want to use this package. It's not expected to
 work.
 
 In normal circumstances, you should not see bootstrap package in any 
-released Fedora. Unfortunatelly the package that is required to complete
-the dependency is stuck on legal review:
-https://bugzilla.redhat.com/show_bug.cgi?id=913254#c1
-
-So it will probably take some time to fix this situation.
-
+released Fedora. 
 EOF
 exit 1
 
