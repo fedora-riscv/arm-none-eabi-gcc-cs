@@ -6,7 +6,7 @@ build dependency. You don't want to use this package. It's not expected to
 work.
 
 In normal circumstances, you should not see bootstrap package in any 
-released Fedora.
+released Fedora. 
 EOF
 exit 1
 

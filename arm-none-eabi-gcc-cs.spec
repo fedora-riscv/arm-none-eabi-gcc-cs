@@ -10,7 +10,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        5.2.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -91,8 +91,12 @@ sed -e 's,^[ ]*/usr/lib/rpm.*/brp-strip,./brp-strip,' \
 
 
 %build
-mkdir -p gcc-%{target}
+mkdir -p gcc-%{target} gcc-nano-%{target}
+
+#### normal version
+
 pushd gcc-%{target}
+
 CC="%{__cc} ${RPM_OPT_FLAGS}  -fno-stack-protector" \
 ../gcc-%{gcc_ver}/configure --prefix=%{_prefix} --mandir=%{_mandir} \
   --with-pkgversion="Fedora %{version}-%{release}" \
@@ -123,9 +127,45 @@ CC="%{__cc} ${RPM_OPT_FLAGS}  -fno-stack-protector" \
 %if %{bootstrap}
 make all-gcc  INHIBIT_LIBC_CFLAGS='-DUSE_TM_CLONE_REGISTRY=0'
 %else
-make  INHIBIT_LIBC_CFLAGS='-DUSE_TM_CLONE_REGISTRY=0'
+make INHIBIT_LIBC_CFLAGS='-DUSE_TM_CLONE_REGISTRY=0'
 %endif
 popd
+
+######### nano version build part (only relevant if not bootstrap)
+%if %{bootstrap}
+%else
+
+mkdir -p gcc-nano-%{target}
+pushd gcc-nano-%{target}
+
+export CFLAGS_FOR_TARGET="$CFLAGS_FOR_TARGET -fno-exceptions -Os "
+export CXXFLAGS_FOR_TARGET="$CXXFLAGS_FOR_TARGET -fno-exceptions -Os "
+
+CC="%{__cc} ${RPM_OPT_FLAGS}  -fno-stack-protector " \
+../gcc-%{gcc_ver}/configure --prefix=%{_prefix} --mandir=%{_mandir} \
+  --with-pkgversion="Fedora %{version}-%{release}" \
+  --with-bugurl="https://bugzilla.redhat.com/" \
+  --infodir=%{_infodir} --target=%{target} \
+  --enable-interwork --enable-multilib \
+  --with-python-dir=%{target}/share/gcc-%{version}/python \
+  --with-multilib-list=armv6-m,armv7-m,armv7e-m,armv7-r \
+    --enable-plugins \
+    --disable-decimal-float \
+    --disable-libffi \
+    --disable-libgomp \
+    --disable-libmudflap \
+    --disable-libquadmath \
+    --disable-libssp \
+    --disable-libstdcxx-pch \
+    --disable-nls \
+    --disable-shared \
+    --disable-threads \
+    --disable-tls \
+   --enable-languages=c,c++ --with-newlib --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --with-headers=/usr/%{target}/include --with-system-zlib
+#  --enable-lto \
+make INHIBIT_LIBC_CFLAGS='-DUSE_TM_CLONE_REGISTRY=0'
+popd
+%endif
 
 
 %install
@@ -138,6 +178,51 @@ install -p -m 0755 -D %{SOURCE2} $RPM_BUILD_ROOT/%{_bindir}/%{target}-c++
 make install DESTDIR=$RPM_BUILD_ROOT
 %endif
 popd
+
+##### nano version (only relevant non-bootstrap)
+
+%if %{bootstrap}
+%else
+# everybody needs to end up built with the One True DESTDIR
+# to arrange for that, move the non-nano DESTDIR out of the way
+# temporarily, and make an empty one for the nano build to
+# populate.  Later we'll pick just the bits from the nano one
+# into the non-nano one, and switch the non-nano one to be
+# the One True DESTDIR again.
+#
+# Without this sleight-of-hand we get rpmbuild errors noticing that
+# the DESTDIR the nano bits were built with is not the One True
+# DESTDIR.
+
+rm -rf $RPM_BUILD_ROOT-non-nano
+mv $RPM_BUILD_ROOT $RPM_BUILD_ROOT-non-nano
+pushd gcc-nano-%{target}
+
+make install DESTDIR=$RPM_BUILD_ROOT
+popd
+pushd $RPM_BUILD_ROOT
+for i in libstdc++.a libsupc++.a ; do
+	find . -name "$i" | while read line ; do
+		R=`echo $line | sed "s/\.a/_nano\.a/g"`
+		echo "$RPM_BUILD_ROOT/$line -> $RPM_BUILD_ROOT-non-nano/$R"
+		cp $line $RPM_BUILD_ROOT-non-nano/$R
+	done 
+done
+popd
+
+# junk the nano DESTDIR now we picked out the bits we needed into
+# the non-nano destdir
+rm -rf $RPM_BUILD_ROOT
+
+# put the "non-nano + picked nano bits" destdir back at the
+# One True DESTDIR location.  Even though it has bits from two different
+# builds, all the bits feel they were installed to DESTDIR
+mv $RPM_BUILD_ROOT-non-nano $RPM_BUILD_ROOT
+
+%endif
+### end of nano version install magic
+
+
 # we don't want these as we are a cross version
 rm -r $RPM_BUILD_ROOT%{_infodir}
 rm -r $RPM_BUILD_ROOT%{_mandir}/man7
@@ -199,6 +284,9 @@ popd
 %endif
 
 %changelog
+* Thu Nov 12 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:5.2.0-3
+- build nano libstdc++ (credits: Andy Green)
+
 * Thu Sep 03 2015 Michal Hlavinka <mhlavink@redhat.com> - 1:5.2.0-2
 - regular build of 5.2.0
 
