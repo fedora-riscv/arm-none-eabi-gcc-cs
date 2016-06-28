@@ -10,7 +10,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        6.1.0
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -284,7 +284,7 @@ popd
 %endif
 
 %changelog
-* Tue Jun 28 2016 Michal Hlavinka <mhlavink@redhat.com> - 1:6.1.0-2
+* Tue Jun 28 2016 Michal Hlavinka <mhlavink@redhat.com> - 1:6.1.0-1
 - bootstrap build for gcc 6.1.0
 
 * Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1:5.2.0-4
