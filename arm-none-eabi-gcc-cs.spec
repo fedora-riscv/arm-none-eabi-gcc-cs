@@ -1,16 +1,16 @@
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        6.1.0
-%global gcc_short_ver  6.1
+%global gcc_ver        6.2.0
+%global gcc_short_ver  6.2
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
-%global bootstrap      0
+%global bootstrap      1
 
 Name:           %{target}-gcc-cs
 Epoch:          1
-Version:        6.1.0
-Release:        2%{?dist}
+Version:        6.2.0
+Release:        1%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -284,6 +284,9 @@ popd
 %endif
 
 %changelog
+* Sun Nov 13 2016 Michal Hlavinka <mhlavink@redhat.com> - 1:6.2.0-1
+- bootstrap build for 6.2.0
+
 * Fri Jul 08 2016 Michal Hlavinka <mhlavink@redhat.com> - 1:6.1.0-2
 - proper build of new version
 
