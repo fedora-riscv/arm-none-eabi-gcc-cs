@@ -5,12 +5,12 @@
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
-%global bootstrap      1
+%global bootstrap      2
 
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        %{gcc_ver}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -281,6 +281,9 @@ popd
 %endif
 
 %changelog
+* Fri Jun 23 2017 Michal Hlavinka <mhlavink@redhat.com> - 1:7.1.0-2
+- propper build for 7.1.0
+
 * Thu Jun 22 2017 Michal Hlavinka <mhlavink@redhat.com> - 1:7.1.0-1
 - bootstrap build for 7.1.0
 
