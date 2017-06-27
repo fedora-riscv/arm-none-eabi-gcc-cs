@@ -245,6 +245,12 @@ rm -rf $RPM_BUILD_ROOT/%{_datadir}/gcc-%{gcc_ver} ||:
 %if %{bootstrap}
 exit 0
 %endif
+
+%ifarch ppc64
+# test does not work, upstream ignores it, https://gcc.gnu.org/bugzilla/show_bug.cgi?id=57591
+exit 0
+%endif
+
 pushd gcc-%{target}
 #BuildRequires: autoge may be needed
 make check
