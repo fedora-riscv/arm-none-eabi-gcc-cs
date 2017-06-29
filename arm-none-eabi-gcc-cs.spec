@@ -1,16 +1,16 @@
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        6.2.0
-%global gcc_short_ver  6.2
+%global gcc_ver        7.1.0
+%global gcc_short_ver  7.1
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
-%global bootstrap      0
+%global bootstrap      1
 
 Name:           %{target}-gcc-cs
 Epoch:          1
-Version:        6.2.0
-Release:        3%{?dist}
+Version:        %{gcc_ver}
+Release:        1%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -31,7 +31,6 @@ Source0:        gcc-%{gcc_ver}.tar.bz2
 
 Source1:        README.fedora
 Source2:        bootstrapexplain
-Patch1:         enable-with-multilib-list-for-arm.patch
 
 BuildRequires:  %{target}-binutils >= 2.21, zlib-devel gmp-devel mpfr-devel libmpc-devel flex autogen
 %if ! %{bootstrap}
@@ -63,7 +62,6 @@ compile c++ code for the %{target} platform, instead of for the native
 %prep
 %setup -q -c
 pushd gcc-%{gcc_ver}
-%patch1 -p2 -b .arm
 
 contrib/gcc_update --touch
 popd
@@ -103,26 +101,25 @@ CC="%{__cc} ${RPM_OPT_FLAGS}  -fno-stack-protector" \
   --with-bugurl="https://bugzilla.redhat.com/" \
   --infodir=%{_infodir} --target=%{target} \
   --enable-interwork --enable-multilib \
-  --with-python-dir=%{target}/share/gcc-%{version}/python \
-  --with-multilib-list=armv6-m,armv7-m,armv7e-m,armv7-r \
-    --enable-plugins \
-    --disable-decimal-float \
-    --disable-libffi \
-    --disable-libgomp \
-    --disable-libmudflap \
-    --disable-libquadmath \
-    --disable-libssp \
-    --disable-libstdcxx-pch \
-    --disable-nls \
-    --disable-shared \
-    --disable-threads \
-    --disable-tls \
+  --with-python-dir=share/%{target}/gcc-%{version}/python \
+  --with-multilib-list=rmprofile \
+  --enable-plugins \
+  --disable-decimal-float \
+  --disable-libffi \
+  --disable-libgomp \
+  --disable-libmudflap \
+  --disable-libquadmath \
+  --disable-libssp \
+  --disable-libstdcxx-pch \
+  --disable-nls \
+  --disable-shared \
+  --disable-threads \
+  --disable-tls \
 %if %{bootstrap}
    --enable-languages=c --with-newlib --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --without-headers --with-system-zlib
 %else
-   --enable-languages=c,c++ --with-newlib --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --with-headers=/usr/%{target}/include --with-system-zlib
+   --enable-languages=c,c++ --with-newlib --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --with-headers=yes --with-system-zlib --with-sysroot=/usr/%{target}
 %endif
-#  --enable-lto \
 
 %if %{bootstrap}
 make all-gcc  INHIBIT_LIBC_CFLAGS='-DUSE_TM_CLONE_REGISTRY=0'
@@ -147,22 +144,22 @@ CC="%{__cc} ${RPM_OPT_FLAGS}  -fno-stack-protector " \
   --with-bugurl="https://bugzilla.redhat.com/" \
   --infodir=%{_infodir} --target=%{target} \
   --enable-interwork --enable-multilib \
-  --with-python-dir=%{target}/share/gcc-%{version}/python \
-  --with-multilib-list=armv6-m,armv7-m,armv7e-m,armv7-r \
-    --enable-plugins \
-    --disable-decimal-float \
-    --disable-libffi \
-    --disable-libgomp \
-    --disable-libmudflap \
-    --disable-libquadmath \
-    --disable-libssp \
-    --disable-libstdcxx-pch \
-    --disable-nls \
-    --disable-shared \
-    --disable-threads \
-    --disable-tls \
-   --enable-languages=c,c++ --with-newlib --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --with-headers=/usr/%{target}/include --with-system-zlib
-#  --enable-lto \
+  --with-python-dir=share/%{target}/gcc-%{version}/python \
+  --with-multilib-list=rmprofile \
+  --enable-plugins \
+  --disable-decimal-float \
+  --disable-libffi \
+  --disable-libgomp \
+  --disable-libmudflap \
+  --disable-libquadmath \
+  --disable-libssp \
+  --disable-libstdcxx-pch \
+  --disable-nls \
+  --disable-shared \
+  --disable-threads \
+  --disable-tls \
+  --with-sysroot=/usr/%{target} \
+ --enable-languages=c,c++ --with-newlib --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --with-headers=yes --with-system-zlib
 make INHIBIT_LIBC_CFLAGS='-DUSE_TM_CLONE_REGISTRY=0'
 popd
 %endif
@@ -248,6 +245,12 @@ rm -rf $RPM_BUILD_ROOT/%{_datadir}/gcc-%{gcc_ver} ||:
 %if %{bootstrap}
 exit 0
 %endif
+
+%ifarch ppc64
+# test does not work, upstream ignores it, https://gcc.gnu.org/bugzilla/show_bug.cgi?id=57591
+exit 0
+%endif
+
 pushd gcc-%{target}
 #BuildRequires: autoge may be needed
 make check
@@ -267,7 +270,7 @@ popd
 %{_mandir}/man1/%{target}-*.1.gz
 %if ! %{bootstrap}
 /usr/%{target}/lib/
-%dir /usr/%{target}/share/gcc-%{gcc_ver}/python/
+%dir /usr/share/%{target}/gcc-%{gcc_ver}/python/
 %exclude %{_bindir}/%{target}-?++
 %exclude %{_libexecdir}/gcc/%{target}/%{gcc_ver}/cc1plus
 %exclude %{_mandir}/man1/%{target}-g++.1.gz
@@ -279,11 +282,14 @@ popd
 %if ! %{bootstrap}
 %{_libexecdir}/gcc/%{target}/%{gcc_ver}/cc1plus
 /usr/%{target}/include/c++/
-/usr/%{target}/share/gcc-%{gcc_ver}/python/libstdcxx/
+/usr/share/%{target}/gcc-%{gcc_ver}/python/libstdcxx/
 %{_mandir}/man1/%{target}-g++.1.gz
 %endif
 
 %changelog
+* Fri Jun 30 2017 Michal Hlavinka <mhlavink@redhat.com> - 1:7.1.0-1
+- bootstrap build for 7.1.0
+
 * Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1:6.2.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
