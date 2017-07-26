@@ -10,7 +10,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        %{gcc_ver}
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -287,6 +287,9 @@ popd
 %endif
 
 %changelog
+* Wed Jul 26 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1:7.1.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Fri Jun 23 2017 Michal Hlavinka <mhlavink@redhat.com> - 1:7.1.0-3
 - propper build for 7.1.0, prev one was still bootstrap
 
