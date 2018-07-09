@@ -1,7 +1,7 @@
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        7.1.0
-%global gcc_short_ver  7.1
+%global gcc_ver        7.3.0
+%global gcc_short_ver  7.3
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
@@ -10,7 +10,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        %{gcc_ver}
-Release:        6%{?dist}
+Release:        1%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 Group:          Development/Tools
 
@@ -27,7 +27,7 @@ Group:          Development/Tools
 License:        GPLv2+ and GPLv3+ and LGPLv2+ and BSD
 URL:            http://www.codesourcery.com/sgpp/lite/%{processor_arch}
 
-Source0:        gcc-%{gcc_ver}.tar.bz2
+Source0:        gcc-%{gcc_ver}.tar.xz
 
 Source1:        README.fedora
 Source2:        bootstrapexplain
@@ -287,6 +287,9 @@ popd
 %endif
 
 %changelog
+* Mon Jul 09 2018 Michal Hlavinka <mhlavink@redhat.com> - 1:7.3.0-1
+- updated to 7.3.0
+
 * Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1:7.1.0-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
