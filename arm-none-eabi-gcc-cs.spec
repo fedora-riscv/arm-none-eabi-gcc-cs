@@ -32,6 +32,7 @@ Source0:        gcc-%{gcc_ver}.tar.xz
 Source1:        README.fedora
 Source2:        bootstrapexplain
 
+BuildRequires:  gcc-c++
 BuildRequires:  %{target}-binutils >= 2.21, zlib-devel gmp-devel mpfr-devel libmpc-devel flex autogen
 %if ! %{bootstrap}
 BuildRequires:  %{target}-newlib
