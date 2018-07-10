@@ -258,7 +258,6 @@ make check
 popd
 
 %files
-%defattr(-,root,root,-)
 %doc gcc-%{gcc_ver}/COPYING*
 %doc gcc-%{gcc_ver}/README README.fedora
 %{_bindir}/%{target}-*
@@ -278,7 +277,6 @@ popd
 %endif
 
 %files c++
-%defattr(-,root,root,-)
 %{_bindir}/%{target}-?++
 %if ! %{bootstrap}
 %{_libexecdir}/gcc/%{target}/%{gcc_ver}/cc1plus
