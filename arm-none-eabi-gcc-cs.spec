@@ -12,7 +12,6 @@ Epoch:          1
 Version:        %{gcc_ver}
 Release:        2%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
-Group:          Development/Tools
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
 # LGPLv2+ libquadmath/ libjava/libltdl/ gcc/testsuite/objc.dg/gnu-encoding/generate-random 
@@ -51,7 +50,6 @@ GNU GCC release.
 
 %package c++
 Summary:        Cross Compiling GNU GCC targeted at %{target}
-Group:          Development/Languages
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Provides:       %{target}-gcc-c++ = %{gcc_ver}
 
