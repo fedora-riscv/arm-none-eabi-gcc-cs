@@ -1,7 +1,7 @@
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        7.3.0
-%global gcc_short_ver  7.3
+%global gcc_ver        7.4.0
+%global gcc_short_ver  7.4
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
@@ -10,9 +10,8 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        %{gcc_ver}
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
-Group:          Development/Tools
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
 # LGPLv2+ libquadmath/ libjava/libltdl/ gcc/testsuite/objc.dg/gnu-encoding/generate-random 
@@ -51,7 +50,6 @@ GNU GCC release.
 
 %package c++
 Summary:        Cross Compiling GNU GCC targeted at %{target}
-Group:          Development/Languages
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Provides:       %{target}-gcc-c++ = %{gcc_ver}
 
@@ -258,7 +256,7 @@ make check
 popd
 
 %files
-%doc gcc-%{gcc_ver}/COPYING*
+%license gcc-%{gcc_ver}/COPYING*
 %doc gcc-%{gcc_ver}/README README.fedora
 %{_bindir}/%{target}-*
 %dir %{_prefix}/lib/gcc
@@ -286,12 +284,17 @@ popd
 %endif
 
 %changelog
+* Wed Feb 27 2019 Michal Hlavinka <mhlavink@redhat.com> - 1:7.4.0-1
+- updated to 7.4.0
+
+* Thu Jan 31 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1:7.3.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
+
 * Thu Jul 12 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1:7.3.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
 * Mon Jul 09 2018 Michal Hlavinka <mhlavink@redhat.com> - 1:7.3.0-1
 - updated to 7.3.0
-
 * Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1:7.1.0-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
