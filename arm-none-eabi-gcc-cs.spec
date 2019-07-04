@@ -24,7 +24,7 @@ Summary:        GNU GCC for cross-compilation for %{target} target
 #               libjava/classpath/external/sax/org/xml/sax/ext/DeclHandler.java
 # BSL zlib/contrib/dotzlib/DotZLib/GZipStream.cs
 License:        GPLv2+ and GPLv3+ and LGPLv2+ and BSD
-URL:            http://www.codesourcery.com/sgpp/lite/%{processor_arch}
+URL:            https://gcc.gnu.org/
 
 Source0:        gcc-%{gcc_ver}.tar.xz
 
@@ -43,10 +43,6 @@ Provides:       %{target}-gcc = %{gcc_ver}
 This is a Cross Compiling version of GNU GCC, which can be used to
 compile for the %{target} platform, instead of for the
 native %{_arch} platform.
-
-This package is based on the CodeSourcery %{cs_date}-%{cs_rel} release,
-which includes improved ARM target support compared to the corresponding 
-GNU GCC release.
 
 %package c++
 Summary:        Cross Compiling GNU GCC targeted at %{target}
