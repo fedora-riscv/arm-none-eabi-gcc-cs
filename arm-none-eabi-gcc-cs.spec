@@ -10,7 +10,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        %{gcc_ver}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -280,6 +280,9 @@ popd
 %endif
 
 %changelog
+* Wed Jul 24 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1:7.4.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
 * Wed Feb 27 2019 Michal Hlavinka <mhlavink@redhat.com> - 1:7.4.0-1
 - updated to 7.4.0
 
