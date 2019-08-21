@@ -1,7 +1,7 @@
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        7.4.0
-%global gcc_short_ver  7.4
+%global gcc_ver        9.2.0
+%global gcc_short_ver  9.2
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
@@ -24,7 +24,7 @@ Summary:        GNU GCC for cross-compilation for %{target} target
 #               libjava/classpath/external/sax/org/xml/sax/ext/DeclHandler.java
 # BSL zlib/contrib/dotzlib/DotZLib/GZipStream.cs
 License:        GPLv2+ and GPLv3+ and LGPLv2+ and BSD
-URL:            http://www.codesourcery.com/sgpp/lite/%{processor_arch}
+URL:            https://gcc.gnu.org/
 
 Source0:        gcc-%{gcc_ver}.tar.xz
 
@@ -43,10 +43,6 @@ Provides:       %{target}-gcc = %{gcc_ver}
 This is a Cross Compiling version of GNU GCC, which can be used to
 compile for the %{target} platform, instead of for the
 native %{_arch} platform.
-
-This package is based on the CodeSourcery %{cs_date}-%{cs_rel} release,
-which includes improved ARM target support compared to the corresponding 
-GNU GCC release.
 
 %package c++
 Summary:        Cross Compiling GNU GCC targeted at %{target}
@@ -123,7 +119,7 @@ CC="%{__cc} ${RPM_OPT_FLAGS}  -fno-stack-protector" \
 %if %{bootstrap}
 make all-gcc  INHIBIT_LIBC_CFLAGS='-DUSE_TM_CLONE_REGISTRY=0'
 %else
-make INHIBIT_LIBC_CFLAGS='-DUSE_TM_CLONE_REGISTRY=0'
+make %{_smp_mflags} INHIBIT_LIBC_CFLAGS='-DUSE_TM_CLONE_REGISTRY=0'
 %endif
 popd
 
@@ -159,7 +155,7 @@ CC="%{__cc} ${RPM_OPT_FLAGS}  -fno-stack-protector " \
   --disable-tls \
   --with-sysroot=/usr/%{target} \
  --enable-languages=c,c++ --with-newlib --disable-nls --disable-shared --disable-threads --with-gnu-as --with-gnu-ld --with-gmp --with-mpfr --with-mpc --with-headers=yes --with-system-zlib
-make INHIBIT_LIBC_CFLAGS='-DUSE_TM_CLONE_REGISTRY=0'
+make %{_smp_mflags} INHIBIT_LIBC_CFLAGS='-DUSE_TM_CLONE_REGISTRY=0'
 popd
 %endif
 
@@ -284,6 +280,12 @@ popd
 %endif
 
 %changelog
+* Wed Aug 21 2019 Michal Hlavinka <mhlavink@redhat.com> - 1:9.2.0-1
+- updated to 9.2.0
+
+* Wed Jul 24 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1:7.4.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
 * Wed Feb 27 2019 Michal Hlavinka <mhlavink@redhat.com> - 1:7.4.0-1
 - updated to 7.4.0
 
