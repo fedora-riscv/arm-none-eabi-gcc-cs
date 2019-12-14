@@ -10,7 +10,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        %{gcc_ver}
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -30,6 +30,7 @@ Source0:        gcc-%{gcc_ver}.tar.xz
 
 Source1:        README.fedora
 Source2:        bootstrapexplain
+Patch0:		gcc10.patch
 
 BuildRequires:  gcc-c++
 BuildRequires:  %{target}-binutils >= 2.21, zlib-devel gmp-devel mpfr-devel libmpc-devel flex autogen
@@ -56,6 +57,7 @@ compile c++ code for the %{target} platform, instead of for the native
 
 %prep
 %setup -q -c
+%patch0 -p1
 pushd gcc-%{gcc_ver}
 
 contrib/gcc_update --touch
@@ -280,6 +282,9 @@ popd
 %endif
 
 %changelog
+* Sat Dec 14 2019 Jeff Law <law@redhat.com> - 1:9.2.0-3
+- Backport change to libbacktrace testsuite so it works with gcc-10
+
 * Wed Oct  9 2019 Jerry James <loganjerry@gmail.com> - 1:9.2.0-2
 - Rebuild for mpfr 4
 

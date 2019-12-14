@@ -1,0 +1,14 @@
+diff -Nrup a/gcc-9.2.0/libbacktrace/edtest.c b/gcc-9.2.0/libbacktrace/edtest.c
+--- a/gcc-9.2.0/libbacktrace/edtest.c	2019-01-01 05:31:55.000000000 -0700
++++ b/gcc-9.2.0/libbacktrace/edtest.c	2019-10-31 14:26:22.808494361 -0600
+@@ -43,8 +43,8 @@ POSSIBILITY OF SUCH DAMAGE.  */
+ 
+ #include "testlib.h"
+ 
+-static int test1 (void) __attribute__ ((noinline, unused));
+-static int test1 (void) __attribute__ ((noinline, unused));
++static int test1 (void) __attribute__ ((noinline, noclone, unused));
++static int test1 (void) __attribute__ ((noinline, noclone, unused));
+ extern int f2 (int);
+ extern int f3 (int, int);
+ 
