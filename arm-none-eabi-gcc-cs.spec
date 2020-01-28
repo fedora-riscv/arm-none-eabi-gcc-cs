@@ -10,7 +10,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        %{gcc_ver}
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -282,6 +282,9 @@ popd
 %endif
 
 %changelog
+* Tue Jan 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1:9.2.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
 * Sat Dec 14 2019 Jeff Law <law@redhat.com> - 1:9.2.0-3
 - Backport change to libbacktrace testsuite so it works with gcc-10
 
