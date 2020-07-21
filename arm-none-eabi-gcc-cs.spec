@@ -10,7 +10,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        %{gcc_ver}
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -31,6 +31,7 @@ Source0:        gcc-%{gcc_ver}.tar.xz
 Source1:        README.fedora
 Source2:        bootstrapexplain
 Patch0:		gcc10.patch
+Patch1:		gcc-config.patch
 
 BuildRequires:  gcc-c++
 BuildRequires:  %{target}-binutils >= 2.21, zlib-devel gmp-devel mpfr-devel libmpc-devel flex autogen
@@ -58,6 +59,13 @@ compile c++ code for the %{target} platform, instead of for the native
 %prep
 %setup -q -c
 %patch0 -p1
+%patch1 -p1
+pushd gcc-9.2.0/libiberty
+autoconf -f
+popd
+pushd gcc-9.2.0/intl
+autoconf -f
+popd
 pushd gcc-%{gcc_ver}
 
 contrib/gcc_update --touch
@@ -282,6 +290,9 @@ popd
 %endif
 
 %changelog
+* Mon Jul 20 2020 Jeff Law <law@redhat.com> - 1:9.2.0-5
+- Fix broken configured tests compromised by LTO
+
 * Tue Jan 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1:9.2.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
