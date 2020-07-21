@@ -33,6 +33,7 @@ Source2:        bootstrapexplain
 Patch0:		gcc10.patch
 Patch1:		gcc-config.patch
 
+BuildRequires:	autoconf
 BuildRequires:  gcc-c++
 BuildRequires:  %{target}-binutils >= 2.21, zlib-devel gmp-devel mpfr-devel libmpc-devel flex autogen
 %if ! %{bootstrap}
@@ -292,6 +293,7 @@ popd
 %changelog
 * Mon Jul 20 2020 Jeff Law <law@redhat.com> - 1:9.2.0-5
 - Fix broken configured tests compromised by LTO
+- Add autoconf to BuildRequires
 
 * Tue Jan 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1:9.2.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
