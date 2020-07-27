@@ -10,7 +10,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        %{gcc_ver}
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -291,6 +291,9 @@ popd
 %endif
 
 %changelog
+* Mon Jul 27 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1:9.2.0-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
 * Mon Jul 20 2020 Jeff Law <law@redhat.com> - 1:9.2.0-5
 - Fix broken configured tests compromised by LTO
 - Add autoconf to BuildRequires
