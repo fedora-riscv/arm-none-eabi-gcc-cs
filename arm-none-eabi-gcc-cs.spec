@@ -10,7 +10,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        %{gcc_ver}
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -95,6 +95,11 @@ sed -e 's,^[ ]*/usr/lib/rpm.*/brp-strip,./brp-strip,' \
 
 
 %build
+# This package's testsuite fails on s390 when LTO is enabled.  Disable
+# LTO for now on s390x until the root cause is identified
+%ifarch s390x
+%define _lto_cflags %{nil}
+%endif
 mkdir -p gcc-%{target} gcc-nano-%{target}
 
 #### normal version
@@ -291,6 +296,9 @@ popd
 %endif
 
 %changelog
+* Mon Aug 10 2020 Jeff Law <law@redhat.com> - 1:9.2.0-8
+- Disable LTO on s390x for now
+
 * Sat Aug 01 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1:9.2.0-7
 - Second attempt - Rebuilt for
   https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
