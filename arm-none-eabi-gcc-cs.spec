@@ -1,7 +1,7 @@
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        9.2.0
-%global gcc_short_ver  9.2
+%global gcc_ver        10.2.0
+%global gcc_short_ver  10.2
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
@@ -10,7 +10,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        %{gcc_ver}
-Release:        4%{?dist}
+Release:        2%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -31,7 +31,9 @@ Source0:        gcc-%{gcc_ver}.tar.xz
 Source1:        README.fedora
 Source2:        bootstrapexplain
 Patch0:		gcc10.patch
+Patch1:		gcc-config.patch
 
+BuildRequires:	autoconf
 BuildRequires:  gcc-c++
 BuildRequires:  %{target}-binutils >= 2.21, zlib-devel gmp-devel mpfr-devel libmpc-devel flex autogen
 %if ! %{bootstrap}
@@ -57,7 +59,16 @@ compile c++ code for the %{target} platform, instead of for the native
 
 %prep
 %setup -q -c
-%patch0 -p1
+pushd gcc-%{gcc_ver}
+#%patch0 -p2 -b .gcc10fix
+%patch1 -p2 -b .gccconfig
+popd
+pushd gcc-%{gcc_ver}/libiberty
+autoconf -f
+popd
+pushd gcc-%{gcc_ver}/intl
+autoconf -f
+popd
 pushd gcc-%{gcc_ver}
 
 contrib/gcc_update --touch
@@ -86,6 +97,11 @@ sed -e 's,^[ ]*/usr/lib/rpm.*/brp-strip,./brp-strip,' \
 
 
 %build
+# This package's testsuite fails on s390 when LTO is enabled.  Disable
+# LTO for now on s390x until the root cause is identified
+%ifarch s390x
+%define _lto_cflags %{nil}
+%endif
 mkdir -p gcc-%{target} gcc-nano-%{target}
 
 #### normal version
@@ -282,6 +298,26 @@ popd
 %endif
 
 %changelog
+* Wed Nov 04 2020 Michal Hlavinka <mhlavink@redhat.com> - 1:10.2.0-2
+- regular build for 10.2.0
+
+* Wed Nov 04 2020 Michal Hlavinka <mhlavink@redhat.com> - 1:10.2.0-1
+- bootstrap build for gcc 10.2.0
+
+* Mon Aug 10 2020 Jeff Law <law@redhat.com> - 1:9.2.0-8
+- Disable LTO on s390x for now
+
+* Sat Aug 01 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1:9.2.0-7
+- Second attempt - Rebuilt for
+  https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
+* Mon Jul 27 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1:9.2.0-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
+* Mon Jul 20 2020 Jeff Law <law@redhat.com> - 1:9.2.0-5
+- Fix broken configured tests compromised by LTO
+- Add autoconf to BuildRequires
+
 * Tue Jan 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1:9.2.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
