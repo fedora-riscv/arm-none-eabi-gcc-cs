@@ -38,6 +38,7 @@ BuildRequires:  gcc-c++
 BuildRequires:  %{target}-binutils >= 2.21, zlib-devel gmp-devel mpfr-devel libmpc-devel flex autogen
 %if ! %{bootstrap}
 BuildRequires:  %{target}-newlib
+BuildRequires: make
 %endif
 Requires:       %{target}-binutils >= 2.21
 Provides:       %{target}-gcc = %{gcc_ver}
