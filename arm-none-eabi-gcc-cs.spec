@@ -10,7 +10,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        %{gcc_ver}
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -299,6 +299,9 @@ popd
 %endif
 
 %changelog
+* Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1:10.2.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
 * Wed Nov 04 2020 Michal Hlavinka <mhlavink@redhat.com> - 1:10.2.0-2
 - regular build for 10.2.0
 
