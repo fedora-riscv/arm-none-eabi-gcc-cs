@@ -10,7 +10,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        %{gcc_ver}
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -32,6 +32,7 @@ Source1:        README.fedora
 Source2:        bootstrapexplain
 Patch0:		gcc10.patch
 Patch1:		gcc-config.patch
+Patch2:		gcc11.patch
 
 BuildRequires:	autoconf
 BuildRequires:  gcc-c++
@@ -63,6 +64,7 @@ compile c++ code for the %{target} platform, instead of for the native
 pushd gcc-%{gcc_ver}
 #%patch0 -p2 -b .gcc10fix
 %patch1 -p2 -b .gccconfig
+%patch2 -p1 -b .gcc11fix
 popd
 pushd gcc-%{gcc_ver}/libiberty
 autoconf -f
@@ -299,6 +301,9 @@ popd
 %endif
 
 %changelog
+* Wed Feb 24 2021 Jeff Law <law@redhat.com> - 1:10.2.0-4
+- Packport fix for libbacktrace's handling of dwarf-5
+
 * Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1:10.2.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
