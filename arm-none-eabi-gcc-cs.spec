@@ -10,7 +10,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        %{gcc_ver}
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -34,7 +34,7 @@ Patch0:		gcc10.patch
 Patch1:		gcc-config.patch
 Patch2:		gcc11.patch
 
-BuildRequires:	autoconf
+BuildRequires:	autoconf = 2.69
 BuildRequires:  gcc-c++
 BuildRequires:  %{target}-binutils >= 2.21, zlib-devel gmp-devel mpfr-devel libmpc-devel flex autogen
 %if ! %{bootstrap}
@@ -301,6 +301,9 @@ popd
 %endif
 
 %changelog
+* Sun Apr 11 2021 Michal Hlavinka <mhlavink@redhat.com> - 1:10.2.0-5
+- add explicit requirement for autoconf 2.69
+
 * Wed Feb 24 2021 Jeff Law <law@redhat.com> - 1:10.2.0-4
 - Packport fix for libbacktrace's handling of dwarf-5
 
