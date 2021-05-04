@@ -1,16 +1,16 @@
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        10.2.0
-%global gcc_short_ver  10.2
+%global gcc_ver        11.1.0
+%global gcc_short_ver  11.1
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
-%global bootstrap      0
+%global bootstrap      1
 
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        %{gcc_ver}
-Release:        4%{?dist}
+Release:        0%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -30,9 +30,7 @@ Source0:        gcc-%{gcc_ver}.tar.xz
 
 Source1:        README.fedora
 Source2:        bootstrapexplain
-Patch0:		gcc10.patch
 Patch1:		gcc-config.patch
-Patch2:		gcc11.patch
 
 BuildRequires:	autoconf
 BuildRequires:  gcc-c++
@@ -62,9 +60,7 @@ compile c++ code for the %{target} platform, instead of for the native
 %prep
 %setup -q -c
 pushd gcc-%{gcc_ver}
-#%patch0 -p2 -b .gcc10fix
 %patch1 -p2 -b .gccconfig
-%patch2 -p1 -b .gcc11fix
 popd
 pushd gcc-%{gcc_ver}/libiberty
 autoconf -f
@@ -301,6 +297,9 @@ popd
 %endif
 
 %changelog
+* Tue May 04 2021 Michal Hlavinka <mhlavink@redhat.com> - 1:11.1.0-0
+- bootstrap build for 11.1.0
+
 * Wed Feb 24 2021 Jeff Law <law@redhat.com> - 1:10.2.0-4
 - Packport fix for libbacktrace's handling of dwarf-5
 
