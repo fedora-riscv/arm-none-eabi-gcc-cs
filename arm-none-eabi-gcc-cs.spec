@@ -32,7 +32,7 @@ Source1:        README.fedora
 Source2:        bootstrapexplain
 Patch1:		gcc-config.patch
 
-BuildRequires:	autoconf
+BuildRequires:	autoconf = 2.69
 BuildRequires:  gcc-c++
 BuildRequires:  %{target}-binutils >= 2.21, zlib-devel gmp-devel mpfr-devel libmpc-devel flex autogen
 %if ! %{bootstrap}
@@ -299,6 +299,9 @@ popd
 %changelog
 * Tue May 04 2021 Michal Hlavinka <mhlavink@redhat.com> - 1:11.1.0-0
 - bootstrap build for 11.1.0
+
+* Sun Apr 11 2021 Michal Hlavinka <mhlavink@redhat.com> - 1:10.2.0-5
+- add explicit requirement for autoconf 2.69
 
 * Wed Feb 24 2021 Jeff Law <law@redhat.com> - 1:10.2.0-4
 - Packport fix for libbacktrace's handling of dwarf-5
