@@ -1,7 +1,7 @@
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        10.2.0
-%global gcc_short_ver  10.2
+%global gcc_ver        10.3.0
+%global gcc_short_ver  10.3
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
@@ -10,7 +10,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        %{gcc_ver}
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -32,12 +32,14 @@ Source1:        README.fedora
 Source2:        bootstrapexplain
 Patch0:		gcc10.patch
 Patch1:		gcc-config.patch
+Patch2:		gcc11.patch
 
 BuildRequires:	autoconf
 BuildRequires:  gcc-c++
 BuildRequires:  %{target}-binutils >= 2.21, zlib-devel gmp-devel mpfr-devel libmpc-devel flex autogen
 %if ! %{bootstrap}
 BuildRequires:  %{target}-newlib
+BuildRequires: make
 %endif
 Requires:       %{target}-binutils >= 2.21
 Provides:       %{target}-gcc = %{gcc_ver}
@@ -62,6 +64,7 @@ compile c++ code for the %{target} platform, instead of for the native
 pushd gcc-%{gcc_ver}
 #%patch0 -p2 -b .gcc10fix
 %patch1 -p2 -b .gccconfig
+%patch2 -p1 -b .gcc11fix
 popd
 pushd gcc-%{gcc_ver}/libiberty
 autoconf -f
@@ -298,7 +301,16 @@ popd
 %endif
 
 %changelog
-* Thu Nov 05 2020 Michal Hlavinka <mhlavink@redhat.com> - 1:10.2.0-2
+* Tue May 04 2021 Michal Hlavinka <mhlavink@redhat.com> - 1:10.3.0-1
+- updated to 10.3.0
+
+* Wed Feb 24 2021 Jeff Law <law@redhat.com> - 1:10.2.0-4
+- Packport fix for libbacktrace's handling of dwarf-5
+
+* Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1:10.2.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
+* Wed Nov 04 2020 Michal Hlavinka <mhlavink@redhat.com> - 1:10.2.0-2
 - regular build for 10.2.0
 
 * Wed Nov 04 2020 Michal Hlavinka <mhlavink@redhat.com> - 1:10.2.0-1
