@@ -1,7 +1,7 @@
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        10.2.0
-%global gcc_short_ver  10.2
+%global gcc_ver        10.3.0
+%global gcc_short_ver  10.3
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
@@ -10,7 +10,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        %{gcc_ver}
-Release:        4%{?dist}
+Release:        1%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -301,6 +301,9 @@ popd
 %endif
 
 %changelog
+* Tue May 04 2021 Michal Hlavinka <mhlavink@redhat.com> - 1:10.3.0-1
+- updated to 10.3.0
+
 * Wed Feb 24 2021 Jeff Law <law@redhat.com> - 1:10.2.0-4
 - Packport fix for libbacktrace's handling of dwarf-5
 
