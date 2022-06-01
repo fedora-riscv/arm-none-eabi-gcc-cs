@@ -26,7 +26,7 @@ Summary:        GNU GCC for cross-compilation for %{target} target
 License:        GPLv2+ and GPLv3+ and LGPLv2+ and BSD
 URL:            https://gcc.gnu.org/
 
-Source0:        gcc-%{gcc_ver}.tar.xz
+Source0:        http://ftp.gnu.org/gnu/gcc/gcc-%{version}/gcc-%{version}.tar.xz
 
 Source1:        README.fedora
 Source2:        bootstrapexplain
