@@ -1,7 +1,7 @@
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        11.1.0
-%global gcc_short_ver  11.1
+%global gcc_ver        11.3.0
+%global gcc_short_ver  11.3
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
@@ -9,8 +9,8 @@
 
 Name:           %{target}-gcc-cs
 Epoch:          1
-Version:        %{gcc_ver}
-Release:        2%{?dist}
+Version:        11.3.0
+Release:        1%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -26,7 +26,7 @@ Summary:        GNU GCC for cross-compilation for %{target} target
 License:        GPLv2+ and GPLv3+ and LGPLv2+ and BSD
 URL:            https://gcc.gnu.org/
 
-Source0:        gcc-%{gcc_ver}.tar.xz
+Source0:        http://ftp.gnu.org/gnu/gcc/gcc-%{version}/gcc-%{version}.tar.xz
 
 Source1:        README.fedora
 Source2:        bootstrapexplain
@@ -298,6 +298,12 @@ popd
 %endif
 
 %changelog
+* Wed Jun 01 2022 Michal Hlavinka <mhlavink@redhat.com> - 1:11.3.0-1
+- updated to 11.3.0
+
+* Wed Jan 19 2022 Fedora Release Engineering <releng@fedoraproject.org> - 1:11.1.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+
 * Wed Jul 21 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1:11.1.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
