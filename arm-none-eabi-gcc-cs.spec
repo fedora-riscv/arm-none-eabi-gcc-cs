@@ -10,7 +10,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        12.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -30,6 +30,9 @@ Source0:        http://ftp.gnu.org/gnu/gcc/gcc-%{version}/gcc-%{version}.tar.xz
 
 Source1:        README.fedora
 Source2:        bootstrapexplain
+
+Patch1:  	gcc12-hack.patch
+Patch2:         gcc12-Wno-format-security.patch
 
 #BuildRequires:	autoconf = 2.69
 BuildRequires:  gcc-c++
@@ -59,6 +62,8 @@ compile c++ code for the %{target} platform, instead of for the native
 %prep
 %setup -q -c
 pushd gcc-%{gcc_ver}
+%patch1 -p0 -b .hack
+%patch2 -p0 -b .wnosecerr
 popd
 pushd gcc-%{gcc_ver}/libiberty
 #autoconf -f
@@ -104,8 +109,10 @@ mkdir -p gcc-%{target} gcc-nano-%{target}
 #### normal version
 
 pushd gcc-%{target}
-
-CC="%{__cc} ${RPM_OPT_FLAGS}  -fno-stack-protector" \
+FILTERED_RPM_OPT_FLAGS=$(echo "${RPM_OPT_FLAGS}" | sed 's/Werror=format-security/Wno-format-security/g')
+export CFLAGS=$FILTERED_RPM_OPT_FLAGS
+export CXXFLAGS=$FILTERED_RPM_OPT_FLAGS
+CC="%{__cc} ${FILTERED_RPM_OPT_FLAGS} -fno-stack-protector" \
 ../gcc-%{gcc_ver}/configure --prefix=%{_prefix} --mandir=%{_mandir} \
   --with-pkgversion="Fedora %{version}-%{release}" \
   --with-bugurl="https://bugzilla.redhat.com/" \
@@ -296,6 +303,9 @@ popd
 %endif
 
 %changelog
+* Tue Aug 02 2022 Michal Hlavinka <mhlavink@redhat.com> - 1:12.1.0-2
+- fix FTBFS (#2113112)
+
 * Wed Jul 27 2022 Michal Hlavinka <mhlavink@redhat.com> - 1:12.1.0-1
 - updated to 12.1.0
 
