@@ -9,8 +9,8 @@
 
 Name:           %{target}-gcc-cs
 Epoch:          1
-Version:        12.1.0
-Release:        2%{?dist}
+Version:        12.2.0
+Release:        1%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -303,6 +303,9 @@ popd
 %endif
 
 %changelog
+* Tue Aug 23 2022 Michal Hlavinka <mhlavink@redhat.com> - 1:12.2.0-1
+- updated to 12.2.0
+
 * Tue Aug 02 2022 Michal Hlavinka <mhlavink@redhat.com> - 1:12.1.0-2
 - fix FTBFS (#2113112)
 
