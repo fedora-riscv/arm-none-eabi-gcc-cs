@@ -1,7 +1,7 @@
 %global processor_arch arm
 %global target         %{processor_arch}-none-eabi
-%global gcc_ver        12.1.0
-%global gcc_short_ver  12.1
+%global gcc_ver        12.2.0
+%global gcc_short_ver  12.2
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
