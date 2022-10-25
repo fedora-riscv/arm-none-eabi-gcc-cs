@@ -5,12 +5,12 @@
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
-%global bootstrap      0
+%global bootstrap      1
 
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        12.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -303,6 +303,9 @@ popd
 %endif
 
 %changelog
+* Tue Oct 25 2022 Michal Hlavinka <mhlavink@redhat.com> - 1:12.2.0-2
+- bootstrap build (do not use)
+
 * Tue Aug 23 2022 Michal Hlavinka <mhlavink@redhat.com> - 1:12.2.0-1
 - updated to 12.2.0
 
