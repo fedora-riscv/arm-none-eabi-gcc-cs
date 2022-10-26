@@ -10,7 +10,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        12.2.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -36,7 +36,7 @@ Patch2:         gcc12-Wno-format-security.patch
 
 #BuildRequires:	autoconf = 2.69
 BuildRequires:  gcc-c++
-BuildRequires:  %{target}-binutils >= 2.21, zlib-devel gmp-devel mpfr-devel libmpc-devel flex autogen
+BuildRequires:  %{target}-binutils >= 2.21, zlib-devel gmp-devel mpfr-devel libmpc-devel flex
 %if ! %{bootstrap}
 BuildRequires:  %{target}-newlib
 BuildRequires: make
@@ -303,6 +303,9 @@ popd
 %endif
 
 %changelog
+* Wed Oct 26 2022 Michal Hlavinka <mhlavink@redhat.com> - 1:12.2.0-3
+- autogen does not seem to be required anymore
+
 * Tue Oct 25 2022 Michal Hlavinka <mhlavink@redhat.com> - 1:12.2.0-2
 - bootstrap build (do not use)
 
