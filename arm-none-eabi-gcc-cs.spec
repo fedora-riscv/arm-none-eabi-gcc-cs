@@ -8,9 +8,9 @@
 %global bootstrap      0
 
 Name:           %{target}-gcc-cs
-Epoch:          2
+Epoch:          1
 Version:        12.2.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -303,7 +303,7 @@ popd
 %endif
 
 %changelog
-* Sun Oct 30 2022 Michal Hlavinka <mhlavink@redhat.com> - 2:12.2.0-3
+* Sun Oct 30 2022 Michal Hlavinka <mhlavink@redhat.com> - 1:12.2.0-4
 - full build
 
 * Wed Oct 26 2022 Michal Hlavinka <mhlavink@redhat.com> - 1:12.2.0-3
