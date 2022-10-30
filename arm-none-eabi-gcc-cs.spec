@@ -5,10 +5,10 @@
 
 # we need newlib to compile complete gcc, but we need gcc to compile newlib,
 # so compile minimal gcc first
-%global bootstrap      1
+%global bootstrap      0
 
 Name:           %{target}-gcc-cs
-Epoch:          1
+Epoch:          2
 Version:        12.2.0
 Release:        3%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
@@ -303,6 +303,9 @@ popd
 %endif
 
 %changelog
+* Sun Oct 30 2022 Michal Hlavinka <mhlavink@redhat.com> - 2:12.2.0-3
+- full build
+
 * Wed Oct 26 2022 Michal Hlavinka <mhlavink@redhat.com> - 1:12.2.0-3
 - autogen does not seem to be required anymore
 
