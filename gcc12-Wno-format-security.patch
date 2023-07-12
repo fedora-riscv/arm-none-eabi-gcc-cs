@@ -32,27 +32,31 @@
  fi
 --- Makefile.tpl.jj	2021-12-30 15:12:42.188164847 +0100
 +++ Makefile.tpl	2022-01-07 12:06:12.115550714 +0100
-@@ -447,8 +447,8 @@ LDFLAGS = @LDFLAGS@
+@@ -446,9 +446,9 @@ LDFLAGS = @LDFLAGS@
  LIBCFLAGS = $(CFLAGS)
  CXXFLAGS = @CXXFLAGS@
  LIBCXXFLAGS = $(CXXFLAGS) -fno-implicit-templates
 -GOCFLAGS = $(CFLAGS)
 -GDCFLAGS = $(CFLAGS)
+-GM2FLAGS = $(CFLAGS)
 +GOCFLAGS = $(filter-out -Wformat-security,$(CFLAGS))
 +GDCFLAGS = $(filter-out -Wformat-security,$(CFLAGS))
++GM2FLAGS = $(filter-out -Wformat-security,$(CFLAGS))
  
  # Pass additional PGO and LTO compiler options to the PGO build.
  BUILD_CFLAGS = $(PGO_BUILD_CFLAGS) $(PGO_BUILD_LTO_CFLAGS)
 --- Makefile.in.jj	2021-12-30 15:12:42.188164847 +0100
 +++ Makefile.in	2022-01-07 12:06:27.335334561 +0100
-@@ -444,8 +444,8 @@ LDFLAGS = @LDFLAGS@
+@@ -446,9 +446,9 @@ LDFLAGS = @LDFLAGS@
  LIBCFLAGS = $(CFLAGS)
  CXXFLAGS = @CXXFLAGS@
  LIBCXXFLAGS = $(CXXFLAGS) -fno-implicit-templates
 -GOCFLAGS = $(CFLAGS)
 -GDCFLAGS = $(CFLAGS)
+-GM2FLAGS = $(CFLAGS)
 +GOCFLAGS = $(filter-out -Wformat-security,$(CFLAGS))
 +GDCFLAGS = $(filter-out -Wformat-security,$(CFLAGS))
++GM2FLAGS = $(filter-out -Wformat-security,$(CFLAGS))
  
  # Pass additional PGO and LTO compiler options to the PGO build.
  BUILD_CFLAGS = $(PGO_BUILD_CFLAGS) $(PGO_BUILD_LTO_CFLAGS)
