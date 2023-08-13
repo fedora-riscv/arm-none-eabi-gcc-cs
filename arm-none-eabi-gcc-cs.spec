@@ -10,7 +10,7 @@
 Name:           %{target}-gcc-cs
 Epoch:          1
 Version:        12.2.0
-Release:        4%{?dist}
+Release:        4.rv64%{?dist}
 Summary:        GNU GCC for cross-compilation for %{target} target
 
 # Most of the sources are licensed under GPLv3+ with these exceptions:
@@ -241,6 +241,11 @@ mv $RPM_BUILD_ROOT-non-nano $RPM_BUILD_ROOT
 ### end of nano version install magic
 
 
+%ifarch riscv64
+mv -f $RPM_BUILD_ROOT%{_libdir}/lp64d/* $RPM_BUILD_ROOT%{_libdir}
+rm -rf $RPM_BUILD_ROOT%{_libdir}/lp64d
+%endif
+
 # we don't want these as we are a cross version
 rm -r $RPM_BUILD_ROOT%{_infodir}
 rm -r $RPM_BUILD_ROOT%{_mandir}/man7
@@ -307,6 +312,9 @@ popd
 %endif
 
 %changelog
+* Sun Aug 13 2023 Liu Yang <Yang.Liu.sn@gmail.com> - 1:12.2.0-4.rv64
+- Fix build on riscv64.
+
 * Wed Apr 12 2023 Michal Hlavinka <mhlavink@redhat.com> - 1:12.2.0-4
 - rebuild for updated newlib package
 
